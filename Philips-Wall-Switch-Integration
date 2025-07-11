@@ -70,15 +70,24 @@ blueprint:
 mode: single
 max_exceeded: silent
 trigger:
-  - platform: state
-    entity_id: !input switch
-    to:
-      - "left_press"
-      - "left_hold"
-      - "left_hold_release"
-      - "right_press"
-      - "right_hold"
-      - "right_hold_release"
+  - platform: mqtt
+    topic: !input switch_topic
+    payload: "left_press"
+  - platform: mqtt
+    topic: !input switch_topic
+    payload: "left_hold"
+  - platform: mqtt
+    topic: !input switch_topic
+    payload: "left_hold_release"
+  - platform: mqtt
+    topic: !input switch_topic
+    payload: "right_press"
+  - platform: mqtt
+    topic: !input switch_topic
+    payload: "right_hold"
+  - platform: mqtt
+    topic: !input switch_topic
+    payload: "right_hold_release"
 action:
 - variables:
     command: "{{ trigger.to_state.attributes.action }}"
