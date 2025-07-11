@@ -4,13 +4,11 @@ blueprint:
   domain: automation
   
   input:
-    switch:
-      name: Switch
-      description: Action sensor of Hue Wall Switch to use
-      selector:
-        entity:
-          domain: sensor
-          integration: mqtt
+  switch_topic:
+    name: MQTT Topic des Schalters
+    description: Das MQTT-Topic, auf dem das Gerät seine Aktionen sendet
+    selector:
+      text:
 
     press_left:
       name: Press left button 
