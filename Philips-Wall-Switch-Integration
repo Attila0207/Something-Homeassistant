@@ -1,24 +1,37 @@
 blueprint:
-  name: Hue Wandschalter über MQTT steuert Deckenleuchte
-  description: Steuert eine Deckenleuchte über MQTT-Tastenevents vom Hue Wandschalter Modul.
+  name: MQTT Hue Wandschalter – Steuerung Deckenleuchte
+  description: >
+    Steuerung einer Deckenleuchte mit MQTT-Tastenevents eines Philips Hue Wandschalter-Moduls.
+    Unterstützt verschiedene Tastenaktionen (press, hold, release).
   domain: automation
   input:
-    mqtt_topic:
-      name: MQTT Topic
-      description: Das Topic, über das der Schalter sendet (z. B. zigbee2mqtt/hue_switch/action).
+    switch_topic:
+      name: MQTT Topic des Schalters
+      description: Das MQTT-Topic, auf dem das Gerät seine Aktionen sendet
       selector:
         text:
-    light_target:
-      name: Licht (Deckenleuchte)
-      description: Die Deckenleuchte, die du mit dem Schalter steuern willst.
+    press_left:
+      name: Press left button
+      description: Action to run on left button press
+      default: []
       selector:
-        target:
-          entity:
-            domain: light
+        action: {}
+    hold_left:
+      name: Hold left button
+      description: Action to run on holding left button
+      default: []
+      selector:
+        action: {}
+    release_left:
+      name: Release left button
+      description: Action to run on releasing left button
+      default: []
+      selector:
+        action: {}
 
 trigger:
   platform: mqtt
-  topic: !input mqtt_topic
+  topic: !input switch_topic
 
 variables:
   payload: "{{ trigger.payload }}"
@@ -27,33 +40,15 @@ action:
   choose:
     - conditions:
         - condition: template
-          value_template: "{{ payload == 'on' }}"
-      sequence:
-        - service: light.turn_on
-          target: !input light_target
+          value_template: "{{ payload == 'press_left' }}"
+      sequence: !input press_left
     - conditions:
         - condition: template
-          value_template: "{{ payload == 'off' }}"
-      sequence:
-        - service: light.turn_off
-          target: !input light_target
+          value_template: "{{ payload == 'hold_left' }}"
+      sequence: !input hold_left
     - conditions:
         - condition: template
-          value_template: "{{ payload == 'up' }}"
-      sequence:
-        - service: light.turn_on
-          target: !input light_target
-        - service: light.increase_brightness
-          data:
-            brightness_step_pct: 10
-          target: !input light_target
-    - conditions:
-        - condition: template
-          value_template: "{{ payload == 'down' }}"
-      sequence:
-        - service: light.decrease_brightness
-          data:
-            brightness_step_pct: 10
-          target: !input light_target
+          value_template: "{{ payload == 'release_left' }}"
+      sequence: !input release_left
 
 mode: restart
