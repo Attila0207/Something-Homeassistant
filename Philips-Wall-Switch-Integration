@@ -40,7 +40,7 @@ action:
   choose:
     - conditions:
         - condition: template
-          value_template: "{{ payload == 'press_left' }}"
+          value_template: "{{ payload == 'left_press' }}"
       sequence: !input press_left
     - conditions:
         - condition: template
@@ -48,7 +48,7 @@ action:
       sequence: !input hold_left
     - conditions:
         - condition: template
-          value_template: "{{ payload == 'release_left' }}"
+          value_template: "{{ payload == 'left_press_release' }}"
       sequence: !input release_left
 
 mode: restart
