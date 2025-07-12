@@ -34,7 +34,7 @@ trigger:
   topic: !input switch_topic
 
 variables:
-  payload: "{{ trigger.payload }}"
+  payload: "{{ action.payload }}"
 
 action:
   choose:
